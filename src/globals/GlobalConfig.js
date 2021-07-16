@@ -5,28 +5,17 @@ export const Version = '1.0'
 export const DefaultErrorMessage = 'Terjadi Kesalahan, mohon coba kembali nanti'
 
 export const Icons = Object.freeze({
-    iconGoodIssue: require("../assets/images/iconFooterTab/box_out_icon.png"),
-    iconGoodReceipt: require("../assets/images/iconFooterTab/box_in_icon.png"),
-    iconTabStockOpname: require("../assets/images/iconFooterTab/stock_opname_tab.png"),
-    iconTabHistory: require("../assets/images/iconFooterTab/history_tab.png"),
-    iconTabReport: require("../assets/images/iconFooterTab/report_icon.png"),
-
-    iconChevronRight: require("../assets/images/icons/chevron-grey-right.png"),
-    iconTanggalBlue: require("../assets/images/icons/tanggal_blue.png"),
-    iconTanggalBlack: require("../assets/images/icons/tanggal_black.png"),
-    iconWaktuBlue: require("../assets/images/icons/waktu_blue.png"),
-    iconWaktuBlack: require("../assets/images/icons/waktu_black.png"),
-
-    iconUpload: require("../assets/images/icons/upload_data.png"),
-    iconChecklist: require("../assets/images/icons/checklist.png"),
-    iconCamera: require("../assets/images/icons/camera.png"),
-    iconLock: require("../assets/images/icons/lock.png"),
-    iconPerson: require("../assets/images/icons/person.png"),
-    iconEdit: require("../assets/images/icons/edit.png"),
-    iconAuthor: require("../assets/images/icons/author.png"),
+    iconCalendar: require("../assets/images/icons/calendar.png"),
+    iconCalendar2: require("../assets/images/icons/calendar_1.png"),
+    iconDaily: require("../assets/images/icons/24-hour-daily-service.png"),
+    iconReport: require("../assets/images/icons/report.png"),
+    iconMoney: require("../assets/images/icons/money.png"),
 })
 
 export const Illustrations = Object.freeze({
+    illustMoneyManagement : require("../assets/images/illustrations/trophy.png"),
+    illustEmpty : require("../assets/images/illustrations/marketing.png"),
+    illustWelcome : require("../assets/images/illustrations/business-strategy.png"),
 })
 
 export const Metrics = Object.freeze({
@@ -38,13 +27,11 @@ export const Metrics = Object.freeze({
 
 export const Colors = Object.freeze({
     WHITE: '#FFFFFF',
-    CYAN: '#279a98',
     GOLD: '#D2A71D',
     DARK: '#272727',
     DARK_LIGHT: '#707070',
     RED: '#EE2020',
     RED_LIGHT: '#F88989',
-    PURPLE: '#A95EFD',
     GRAY_LIGHT: '#F8F8F8',
     GRAY: '#B7B7B7',
     GRAY_DARK: '#ABABAB',
@@ -55,7 +42,6 @@ export const Colors = Object.freeze({
     GREEN: '#59b05c',
     GREEN_DARK: '#00535C',
     BLACK: '#000000',
-    BROWN: '#bd6208'
 })
 
 export const PropertyColors = Object.freeze({
@@ -72,13 +58,6 @@ export const Fonts = Object.freeze({
 })
 
 export const StorageKeys = {
-    CUSTOMER_TOKEN : 'customer_token',
-    USER_DATA: 'user_data',
-    PO_NUMBER: 'po_number',
-    GR_DATA_SUBMIT: 'gr_data_submit',
-    PO_NUMBER_GI: 'po_number_gi',
-    GI_DATA_SUBMIT: 'gi_data_submit',
-    TP_DATA_SUBMIT: 'tp_data_submit',
-    PID_DATA_SUBMIT: 'pid_data_submit',
-    PID_SUBMITTED:'pid_submitted'
+    TRANSACTION_LIST: 'transaction_list',
+    AHP_ALTERNATIVE: 'ahp_alternative',
 }

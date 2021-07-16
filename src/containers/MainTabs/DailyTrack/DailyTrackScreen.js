@@ -127,7 +127,7 @@ const DailyTrackScreen = (props) => {
 				ListEmptyComponent={(
 					<View style={{ flex: 1, alignItems: 'center', paddingTop: 50 }}>
 						<View style={styles.illustContainerImage}>
-							{/* <Image style={styles.illustStyle} source={} /> */}
+							<Image style={styles.illustStyle} source={Illustrations.illustEmpty} />
 							<View style={styles.titleTextContainer}>
 								<Text style={styles.illustTextDesc}>Transaction is empty</Text>
 							</View>

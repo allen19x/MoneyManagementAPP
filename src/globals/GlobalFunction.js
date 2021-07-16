@@ -182,23 +182,10 @@ export const validateEmail = (email) => {
     return re.test(email);
 }
 
-export function getUserData() {
+export function getTransactionList() {
     return new Promise((resolve, reject) => {
         try {
-            AsyncStorage.getItem(StorageKeys.USER_DATA, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else reject(err)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getGRDataSubmit() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.GR_DATA_SUBMIT, (err, res) => {
+            AsyncStorage.getItem(StorageKeys.TRANSACTION_LIST, (err, res) => {
                 if (res) resolve(JSON.parse(res))
                 else resolve(res)
             })
@@ -208,75 +195,10 @@ export function getGRDataSubmit() {
     })
 }
 
-export function getPoNumber() {
+export function getAHPAlternative() {
     return new Promise((resolve, reject) => {
         try {
-            AsyncStorage.getItem(StorageKeys.PO_NUMBER, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else reject(err)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getGIDataSubmit() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.GI_DATA_SUBMIT, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else resolve(res)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getPoNumberGI() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.PO_NUMBER_GI, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else reject(err)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getTPDataSubmit() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.TP_DATA_SUBMIT, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else resolve(res)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getPIDDataSubmit() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.PID_DATA_SUBMIT, (err, res) => {
-                if (res) resolve(JSON.parse(res))
-                else resolve(res)
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
-export function getSubmittedPID() {
-    return new Promise((resolve, reject) => {
-        try {
-            AsyncStorage.getItem(StorageKeys.PID_SUBMITTED, (err, res) => {
+            AsyncStorage.getItem(StorageKeys.AHP_ALTERNATIVE, (err, res) => {
                 if (res) resolve(JSON.parse(res))
                 else resolve(res)
             })

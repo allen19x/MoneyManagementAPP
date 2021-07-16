@@ -3,7 +3,6 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity,
     TouchableNativeFeedback,
     Platform,
     StyleSheet,
@@ -11,18 +10,17 @@ import {
     BackHandler
 } from 'react-native'
 import { Scene, Router, Stack, Actions } from 'react-native-router-flux'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import { Fonts, Icons, Colors, Metrics } from '../globals/GlobalConfig'
 
 import SplashScreen from '../containers/Utility/SplashScreen'
 
-import { getDate, wait } from '../globals/GlobalFunction'
 import GlobalStyle from '../globals/GlobalStyle'
 import DetailTransaction from '../containers/MainTabs/DetailTransaction/DetailTransactionScreen'
 import DailyTrackScreen from '../containers/MainTabs/DailyTrack/DailyTrackScreen'
 import MonthlTrackScreen from '../containers/MainTabs/MonthlyTrack/MonthlyTrackScreen'
 import TransactionSummary from '../containers/MainTabs/TransactionSummary/TransactionSummaryScreen'
+import AHPScreen from '../containers/AHP/AHPScreen'
 
 
 class TabIcon extends PureComponent {
@@ -40,15 +38,15 @@ class TabIcon extends PureComponent {
 
         switch (screenKey) {
             case 'dailyTrack':
-                iconTab = Icons.iconGoodReceipt
+                iconTab = Icons.iconDaily
                 titleTab = 'Daily Track'
                 break;
             case 'monthlyTrack':
-                iconTab = Icons.iconGoodIssue
+                iconTab = Icons.iconCalendar
                 titleTab = 'Monthly Track'
                 break;
             case 'transactionSummary':
-                iconTab = Icons.iconTabStockOpname
+                iconTab = Icons.iconReport
                 titleTab = 'Transaction Summary'
                 break;
         }
@@ -66,19 +64,6 @@ class TabIcon extends PureComponent {
                     <Text style={[{ fontFamily: Fonts.SF_MEDIUM, fontSize: 10, marginTop: 5, textAlign: 'center' }, focused ? { color: focusedColor } : { color: inactiveColor }]}>{titleTab}</Text>
                 </View>
             </TouchableNativeFeedback>
-        )
-    }
-}
-
-class BackIcon extends PureComponent {
-    render() {
-        const { handleBack } = this.props
-        return (
-            <TouchableOpacity onPress={handleBack}>
-                <View style={styles.headerBackContainer}>
-                    <AntDesign name='arrowleft' size={24} />
-                </View>
-            </TouchableOpacity>
         )
     }
 }
@@ -130,13 +115,19 @@ const NavigationRouter = () => {
             <Stack key='root'
                 navigationBarStyle={{ ...GlobalStyle.navigationBarShadow, height: Metrics.NAVBAR_HEIGHT }}
                 transitionConfig={transitionConfig}
-                >
+            >
                 <Scene key='splash'
                     initial
                     hideNavBar
                     type="reset"
                     component={SplashScreen}
                 />
+                <Scene
+                    initial
+                    hideNavBar
+                    key='ahp'
+                    titleStyle={styles.headerBackTitle}
+                    component={AHPScreen} />
                 <Scene
                     back
                     key='detailTransaction'

@@ -7,7 +7,7 @@ import NavigationRouter from './navigations/NavigationRouter';
 const App = () => {
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar backgroundColor={Colors.GREEN_DARK} barStyle='light-content'/>
+			<StatusBar backgroundColor={Colors.BLUE_DARK} barStyle='light-content'/>
 			<NavigationRouter />
 		</View>
 	)

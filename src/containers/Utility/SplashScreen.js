@@ -8,15 +8,15 @@ import {
 } from 'react-native'
 import { Actions } from 'react-native-router-flux';
 
-import { Colors, Fonts, Icons } from '../../globals/GlobalConfig';
-import { getUserData, wait } from '../../globals/GlobalFunction';
+import { Colors, Fonts, Icons, Illustrations } from '../../globals/GlobalConfig';
+import { getAHPAlternative, wait } from '../../globals/GlobalFunction';
 
 const SplashScreen = () => {
 
 	useEffect(() => {
 		wait(2000)
 		.then(() => {
-			getUserData()
+			getAHPAlternative()
 				.then((res) => {
 					if (res) Actions.tabBar()
 					else Actions.tabBar()
@@ -27,8 +27,8 @@ const SplashScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<StatusBar backgroundColor={Colors.GREEN_DARK} />
-			<Image resizeMethod="resize" source={Icons.iconLogoSariRoti} style={[styles.imageLogo, { width: 200 }]} />
+			<StatusBar backgroundColor={Colors.BLUE_DARK} />
+			<Image resizeMethod="resize" source={Illustrations.illustMoneyManagement} style={[styles.imageLogo, { width: 200 }]} />
 			<Text style={styles.textLogo}>Money Management</Text>
 		</View>
 	)
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 		resizeMode: "contain"
 	},
 	textLogo: {
-		color: Colors.GREEN_DARK,
+		color: Colors.BLUE_DARK,
 		fontSize: 24,
 		marginTop: 30,
 		fontFamily: Fonts.SF_BOLD,
