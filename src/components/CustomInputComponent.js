@@ -17,6 +17,7 @@ export default class CustomInputComponent extends PureComponent {
     render() {
         const {
             label,
+            label2,
             suffix = '',
             isLabelBold,
             value,
@@ -37,9 +38,12 @@ export default class CustomInputComponent extends PureComponent {
             onCustomOptionPress,
             onValueChange,
             onChangeText,
+            onChangeOption,
             onFocus,
             onEndEditing,
             isPlaceholder,
+            isCompared,
+            selectedCriteria,
             placeholder = '',
             keyboardType = 'default'
         } = this.props
@@ -78,8 +82,8 @@ export default class CustomInputComponent extends PureComponent {
                         onValueChange={onValueChange}
                     // placeholder={placeholder}
                     >
-                        {optionList.map((item, index) => 
-                        <Picker.Item key={item.key} label={isOptionIncludeValue && item.value != '' ? `${item.value} - ${item.label}` : item.label} value={item.value} />)}
+                        {optionList.map((item, index) =>
+                            <Picker.Item key={item.key} label={isOptionIncludeValue && item.value != '' ? `${item.value} - ${item.label}` : item.label} value={item.value} />)}
                     </Picker>
                     <View style={{ height: '100%', aspectRatio: 1, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: 0, backgroundColor: Colors.WHITE }}>
                         <AntDesign name='search1' size={20} />
@@ -99,7 +103,7 @@ export default class CustomInputComponent extends PureComponent {
                         onValueChange={onValueChange}
                     // placeholder={placeholder}
                     >
-                        {optionList.map((item, index) => <Picker.Item key={item.MA_MATL_BATCH} label={ item.MA_MATL_BATCH} value={item.MA_MATL_BATCH} />)}
+                        {optionList.map((item, index) => <Picker.Item key={item.MA_MATL_BATCH} label={item.MA_MATL_BATCH} value={item.MA_MATL_BATCH} />)}
                     </Picker>
                 </View>
             )
@@ -116,7 +120,7 @@ export default class CustomInputComponent extends PureComponent {
                         onValueChange={onValueChange}
                     // placeholder={placeholder}
                     >
-                        {optionList.map((item, index) => <Picker.Item key={item.text} label={ item.text } value={item.id} />)}
+                        {optionList.map((item, index) => <Picker.Item key={item.text} label={item.text} value={item.id} />)}
                     </Picker>
                 </View>
             )
@@ -131,14 +135,14 @@ export default class CustomInputComponent extends PureComponent {
         }
         if (disabledTextInput) {
             inputView = (
-                    <View style={GlobalStyle.detailInputContainerWithoutBorder}>
-                        <View style={{ paddingHorizontal: 0, flex: 1 }}>
-                            <Text style={[GlobalStyle.contentCardTextValue, isPlaceholder && { color: Colors.GRAY }]}>{value}</Text>
-                        </View>
-                            <View style={{ width: 50, alignItems: 'flex-end' }}>
-                                <Text style={{ fontWeight: 'bold' }}>{suffix}</Text>
-                            </View>
+                <View style={GlobalStyle.detailInputContainerWithoutBorder}>
+                    <View style={{ paddingHorizontal: 0, flex: 1 }}>
+                        <Text style={[GlobalStyle.contentCardTextValue, isPlaceholder && { color: Colors.GRAY }]}>{value}</Text>
                     </View>
+                    <View style={{ width: 50, alignItems: 'flex-end' }}>
+                        <Text style={{ fontWeight: 'bold' }}>{suffix}</Text>
+                    </View>
+                </View>
             )
         }
         if (isDate) {
@@ -217,6 +221,49 @@ export default class CustomInputComponent extends PureComponent {
                     )}
                     {inputView}
                 </View>
+            )
+        }
+
+        if (isCompared) {
+            return (
+                <View style={{
+                    height: 60,
+                    width: '100%',
+                    flexDirection: 'row',
+                    marginBottom: 10,
+                }}>
+                    <View style={{ flex: 3, flexDirection: 'row', backgroundColor:Colors.GRAY }}>
+                        <TouchableOpacity
+                            onPress={onChangeOption}
+                            style={[{ flex: 1, justifyContent:'center' }, selectedCriteria && { backgroundColor: Colors.GREEN_LIGHT }]}>
+                                <Text style={{ textAlign: 'center', color: "#272727" }}>{label}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={onChangeOption}
+                            style={[{ flex: 1, justifyContent:'center' }, !selectedCriteria && { backgroundColor: Colors.GREEN_LIGHT }]}>
+                                <Text style={{ textAlign: 'center', color: "#272727" }}>{label2}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: "center",
+                        borderBottomWidth: 1,
+                        borderBottomColor: Colors.GRAY
+                    }}>
+                        <TextInput
+                            style={{ paddingHorizontal: 0, flex: 1, color: Colors.BLACK, fontWeight: 'bold', textAlign:'center', fontSize:18 }}
+                            placeholder={placeholder}
+                            placeholderTextColor={Colors.GRAY}
+                            value={String(value)}
+                            onChangeText={onChangeText}
+                            onFocus={onFocus}
+                            onEndEditing={onEndEditing}
+                            keyboardType={'phone-pad'}
+                            multiline={false}
+                        />
+                    </View>
+                </View >
             )
         }
 

@@ -16,6 +16,7 @@ export const Illustrations = Object.freeze({
     illustMoneyManagement : require("../assets/images/illustrations/trophy.png"),
     illustEmpty : require("../assets/images/illustrations/marketing.png"),
     illustWelcome : require("../assets/images/illustrations/business-strategy.png"),
+    illustPairwise : require("../assets/images/illustrations/pairwise.png"),
 })
 
 export const Metrics = Object.freeze({
