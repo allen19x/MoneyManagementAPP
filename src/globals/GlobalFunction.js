@@ -207,3 +207,8 @@ export function getAHPAlternative() {
         }
     })
 }
+
+export const currencyFormat = (value) => {
+    if (value) return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    else return '0'
+}

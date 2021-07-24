@@ -22,7 +22,7 @@ export default class CustomInputComponent extends PureComponent {
             isLabelBold,
             value,
             isOption,
-            isOptionSloc,
+            isOptionType,
             isCustomOption,
             isOptionIncludeValue,
             isDate,
@@ -52,7 +52,7 @@ export default class CustomInputComponent extends PureComponent {
         let inputView = (
             <View style={GlobalStyle.detailInputContainer}>
                 <TextInput
-                    style={{ paddingHorizontal: 0, flex: 1 }}
+                    style={{ paddingHorizontal: 0, flex: 1, color:Colors.BLACK }}
                     placeholder={placeholder}
                     placeholderTextColor={Colors.GRAY}
                     value={String(value)}
@@ -75,12 +75,10 @@ export default class CustomInputComponent extends PureComponent {
                 <TouchableOpacity onPress={onCustomOptionPress} style={GlobalStyle.detailInputContainer}>
                     <Picker
                         style={{ marginLeft: -8, flex: 1 }}
-                        // iosHeader={placeholder}
                         enabled={false}
                         mode="dropdown"
                         selectedValue={value}
                         onValueChange={onValueChange}
-                    // placeholder={placeholder}
                     >
                         {optionList.map((item, index) =>
                             <Picker.Item key={item.key} label={isOptionIncludeValue && item.value != '' ? `${item.value} - ${item.label}` : item.label} value={item.value} />)}
@@ -103,24 +101,22 @@ export default class CustomInputComponent extends PureComponent {
                         onValueChange={onValueChange}
                     // placeholder={placeholder}
                     >
-                        {optionList.map((item, index) => <Picker.Item key={item.MA_MATL_BATCH} label={item.MA_MATL_BATCH} value={item.MA_MATL_BATCH} />)}
+                        {optionList.map((item, index) => <Picker.Item key={item.type} label={item.text} value={item.text} />)}
                     </Picker>
                 </View>
             )
         }
 
-        if (isOptionSloc) {
+        if (isOptionType) {
             inputView = (
                 <View style={GlobalStyle.detailInputContainer}>
                     <Picker
                         style={{ marginLeft: -8, flex: 1 }}
-                        // iosHeader={placeholder}
                         mode="dropdown"
                         selectedValue={value}
                         onValueChange={onValueChange}
-                    // placeholder={placeholder}
                     >
-                        {optionList.map((item, index) => <Picker.Item key={item.text} label={item.text} value={item.id} />)}
+                        {optionList.map((item, index) => <Picker.Item key={item.type} label={item.text} value={item.text} />)}
                     </Picker>
                 </View>
             )
@@ -150,15 +146,15 @@ export default class CustomInputComponent extends PureComponent {
                 inputView = (
                     <View style={GlobalStyle.detailInputContainerWithoutBorder}>
                         <Image source={Icons.iconTanggalBlack} resizeMode='contain' style={{ height: 24, width: 24, marginRight: 15 }} />
-                        <Text style={GlobalStyle.detailValue}>{value ? moment(value).format('YYYY-MM-DD') : 'YYYY-MM-DD'}</Text>
+                        <Text style={GlobalStyle.detailValue}>{value ? moment(value).format('DD-MM-YYYY') : 'DD-MM-YYYY'}</Text>
                     </View>
                 )
             }
             else {
                 inputView = (
-                    <TouchableOpacity onPress={onDatePress} style={GlobalStyle.detailInputContainer}>
+                    <TouchableOpacity onPress={onDatePress} style={GlobalStyle.detailInputContainerWithoutBorder}>
                         <Image source={Icons.iconTanggalBlue} resizeMode='contain' style={{ height: 24, width: 24, marginRight: 15 }} />
-                        <Text style={GlobalStyle.detailDateValue}>{value ? moment(value).format('YYYY-MM-DD') : 'YYYY-MM-DD'}</Text>
+                        <Text style={GlobalStyle.detailDateValue}>{value ? moment(value).format('DD-MM-YYYY') : 'DD-MM-YYYY'}</Text>
                     </TouchableOpacity>
                 )
             }
@@ -197,7 +193,7 @@ export default class CustomInputComponent extends PureComponent {
                             placeholderTextColor={Colors.GRAY}
                             value={value}
                             onChangeText={onChangeText}
-                            style={{ color: Colors.DARK }}
+                            style={{ color: Colors.BLACK }}
                         />
                     </View>
                     {!disabled && (

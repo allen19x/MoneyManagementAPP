@@ -10,6 +10,8 @@ export const Icons = Object.freeze({
     iconDaily: require("../assets/images/icons/24-hour-daily-service.png"),
     iconReport: require("../assets/images/icons/report.png"),
     iconMoney: require("../assets/images/icons/money.png"),
+    iconTanggalBlack: require("../assets/images/icons/tanggal_black.png"),
+    iconTanggalBlue: require("../assets/images/icons/tanggal_blue.png"),
 })
 
 export const Illustrations = Object.freeze({
@@ -27,6 +29,8 @@ export const Metrics = Object.freeze({
 })
 
 export const Colors = Object.freeze({
+    SILVER: '#aaa9ad',
+    BRONZE: '#cd7f32',
     WHITE: '#FFFFFF',
     GOLD: '#D2A71D',
     DARK: '#272727',
@@ -62,3 +66,48 @@ export const StorageKeys = {
     TRANSACTION_LIST: 'transaction_list',
     AHP_ALTERNATIVE: 'ahp_alternative',
 }
+
+export const SelectedBudget = Object.freeze({
+    B_50_30_20: [
+        {
+            type: "Needs",
+            text: "Needs"
+        },
+        {
+            type: "Wants",
+            text: "Wants"
+        },
+        {
+            type: "Save",
+            text: "Save"
+        },
+    ],
+    B_80_20 : [
+        {
+            type: "In",
+            text: "In"
+        },
+        {
+            type: "Out",
+            text: "Out"
+        },
+    ],
+    DEBT_DIET : [
+        {
+            type: "Housing",
+            text: "Housing"
+        },
+        {
+            type: "Transportation",
+            text: "Transportation"
+        },
+        {
+            type: "WantsNOther",
+            text: "Wants and Other"
+        },
+        {
+            type: "DebtPaydown",
+            text: "Debt Paydown"
+        },
+    ],
+})

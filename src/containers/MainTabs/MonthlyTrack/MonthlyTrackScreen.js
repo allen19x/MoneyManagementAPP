@@ -4,33 +4,50 @@ import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import Modal from 'react-native-modal';
+import MonthPicker from 'react-native-month-picker';
 
 import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../../globals/GlobalConfig'
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
 import CustomCalendar from '../../../components/CustomCalendar';
+import CustomButton from '../../../components/CustomButton';
+import { getTransactionList } from '../../../globals/GlobalFunction';
 
 const CardDisplay = (props) => {
 	const { data } = props
 	const {
+		type,
+		value,
+		image,
+		note,
+		pickedDate,
+		postingDateTime
 	} = data
 
 	const openDetail = () => {
+		Actions.detailTransaction({
+			date: date,
+			image: image,
+			note: note,
+			transactionType: type,
+			value: value,
+			postingDateTime: postingDateTime
+		})
 	}
 	return (
-		<TouchableOpacity style={styles.cardContainer} onPress={() => openDetail()}>
+		<TouchableOpacity style={[styles.cardContainer, type == "In" ? { backgroundColor: Colors.GREEN_LIGHT } : { backgroundColor: Colors.RED_LIGHT }]} onPress={() => openDetail()}>
 			<View style={{ flex: 3 }}>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
+				<Text style={styles.cardTitleText}>Transaction Type</Text>
+				<Text style={styles.cardTitleText}>Transaction Nominal</Text>
+				<Text style={styles.cardTitleText}>TransactionDate</Text>
 			</View>
 			<View style={{ flex: 2, alignItems: "flex-end" }}>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
+				<Text style={styles.cardDescriptionText}>{type}</Text>
+				<Text style={styles.cardDescriptionText}>{value}</Text>
+				<Text style={styles.cardDescriptionText}>{moment(pickedDate).format('DD-MM-YYYY')}</Text>
+				{/* <Text style={styles.cardDescriptionText}>{date}</Text> */}
 			</View>
 			<View style={{ flex: 1, alignItems: "flex-end", justifyContent: "center" }}>
 				<Image resizeMethod="resize" source={Icons.iconChevronRight} style={{ height: 15, width: 15 }} />
@@ -39,79 +56,92 @@ const CardDisplay = (props) => {
 	)
 }
 
-const MonthlTrackScreen = (props) => {
+const MonthlyTrackScreen = (props) => {
 	const { lastUpdate } = props
 	const [isLoading, setIsLoading] = useState(false)
-	const [isStartDate, setIsStartDate] = useState(false)
-	const [incorrectDate, setIncorrectDate] = useState(null)
-	const [incorrectMessage, setIncorrectMessage] = useState('')
-	const [isDateModalVisible, setIsDateModalVisible] = useState(false)
-	const [dataDailyTrack, setDataDailyTrack] = useState([])
+	const [isMonthModalVisible, setIsMonthModalVisible] = useState(false)
+	const [dataMonthlyTrack, setDataMonthlyTrack] = useState([])
 	const [filteredMonthlyTrack, setFilteredMonthlyTrack] = useState([])
 	const toastRef = useRef(null);
-	const [search, setSearch] = useState('')
 	const [startDate, setStartDate] = useState(moment(new Date).startOf('month').format('YYYY-MM-DD'))
-	const [endDate, setEndDate] = useState(moment(new Date).format('YYYY-MM-DD'))
+	const [endDate, setEndDate] = useState(moment(new Date).endOf('month').format('YYYY-MM-DD'))
+	const [selectedMonth, setSelectedMonth] = useState(new Date())
+	
 
 	useEffect(() => {
-		const keys = [
-		]
-		AsyncStorage.multiRemove(keys)
 		initialLoad()
+		// const keys = [
+		// 	StorageKeys.TRANSACTION_LIST
+		// ]
+		// AsyncStorage.multiRemove(keys)
+	}, [])
+
+	useEffect(() => {
+		if (lastUpdate) {
+			initialLoad()
+		}
 	}, [lastUpdate])
 
 	const initialLoad = (data, data2) => {
 		const { current } = toastRef
 		setIsLoading(true)
+		getTransactionList().then(result => {
+			if (data != null && data2 !== null) {
+				var filteredTransaction = result.filter(a => {
+					var date = moment(a.pickedDate).format('MM');
+					return (date >= moment(data).format('MM') && date <= moment(data2).format('MM'));
+				});
+				console.log(data, data2)
+				const sortedTransaction = filteredTransaction.sort((a, b) => new Date(b.pickedDate) - new Date(a.pickedDate))
+				setDataMonthlyTrack(sortedTransaction)
+				setFilteredMonthlyTrack(sortedTransaction)
+			}
+			else {
+				if (result != null) {
+					var filteredTransaction = result.filter(a => {
+						var date = moment(a.pickedDate).format('MM');
+						return (date >= moment(startDate).format('MM') && date <= moment(endDate).format('MM'));
+					});
+					const sortedTransaction = filteredTransaction.sort((a, b) => new Date(b.pickedDate) - new Date(a.pickedDate))
+					setDataMonthlyTrack(sortedTransaction)
+					setFilteredMonthlyTrack(sortedTransaction)
+				}
+				// else{
+				// 	setDataMonthlyTrack([])
+				// 	setFilteredMonthlyTrack([])
+				// }
+			}
+		})
 		setIsLoading(false)
 	}
 
-	const clearGR = () => {
-		setSearch("")
-		setFilteredGR(dataGR)
-	}
-
-	const funcGetDate = (res) => {
-		if (!isStartDate) {
-			if (res.dateString > endDate) {
-				setStartDate(moment().startOf('month').format('YYYY-MM-DD'))
-				setEndDate(moment(new Date).format('YYYY-MM-DD'))
-				setIsStartDate(false)
-				setIncorrectDate(new Date)
-				setIncorrectMessage("Start date must be smaller than end date")
-			} else {
-				setStartDate(res.dateString)
-				setIsStartDate(true)
-			}
-		}
-		else {
-			if (startDate > res.dateString) {
-				setStartDate(moment().startOf('month').format('YYYY-MM-DD'))
-				setEndDate(moment(new Date).format('YYYY-MM-DD'))
-				setIsStartDate(false)
-				setIncorrectDate(new Date)
-				setIncorrectMessage("Start date must be smaller than end date")
-			}
-			else {
-				setEndDate(res.dateString)
-				setIsStartDate(false)
-				setIsDateModalVisible(false)
-				initialLoad(startDate, res.dateString)
-			}
-		}
-	}
+	const pickMonth =(data)=> {
+		setStartDate(moment(data).startOf('month').format('YYYY-MM-DD'))
+		setEndDate(moment(data).endOf('month').format('YYYY-MM-DD'))
+		let startMonth = moment(data).startOf('month').format('YYYY-MM-DD')
+		let endMonth = moment(data).endOf('month').format('YYYY-MM-DD')
+		initialLoad(startMonth, endMonth)
+		setIsMonthModalVisible(false)
+    }
 
 	return (
 		<View style={{ flex: 1 }}>
 			<TouchableOpacity
-				onPress={() => setIsDateModalVisible(true)}
+				onPress={() => setIsMonthModalVisible(true)}
 				style={styles.dateStyle}>
-				<Text style={{ fontSize: 14, fontFamily: Fonts.SF_REGULAR, letterSpacing: 0.5, lineHeight: 24, color: Colors.SemiBlackColor }}>Select Start Date</Text>
+				<Text style={{ fontSize: 14, fontFamily: Fonts.SF_REGULAR, letterSpacing: 0.5, lineHeight: 24, color: Colors.SemiBlackColor }}>Select Month</Text>
 				<View style={{ alignItems: 'center', flexDirection: 'row' }}>
 					<Ionicons name="calendar-outline" size={22} color="black" />
-					<Text style={{ fontSize: 14, fontFamily: Fonts.SF_REGULAR, letterSpacing: 0.5, lineHeight: 24, color: Colors.SemiBlackColor }}> {moment(startDate).format('DD MMMM')} - {moment(endDate).format('DD MMMM')}</Text>
+					<Text style={{ fontSize: 14, fontFamily: Fonts.SF_REGULAR, letterSpacing: 0.5, lineHeight: 24, color: Colors.SemiBlackColor }}> {moment(startDate).format('MMMM')}</Text>
 				</View>
 			</TouchableOpacity>
+			<View style={[GlobalStyle.formButtonContainer, { flexDirection: "row" }]}>
+				<CustomButton
+					customColor={Colors.BLUE_DARK}
+					onPress={() => Actions.addTransaction()}
+					label='Add Transaction'
+				/>
+			</View>
 			<FlatList
 				refreshControl={(
 					<RefreshControl
@@ -121,7 +151,7 @@ const MonthlTrackScreen = (props) => {
 				)}
 				data={filteredMonthlyTrack}
 				extraData={filteredMonthlyTrack}
-				keyExtractor={item => String(item.key)}
+				keyExtractor={item => String(item.pickedDate)}
 				contentContainerStyle={GlobalStyle.viewContainer}
 				onEndReachedThreshold={0.1}
 				ListEmptyComponent={(
@@ -139,22 +169,33 @@ const MonthlTrackScreen = (props) => {
 						data={item} />
 				)}
 			/>
-			<CustomCalendar
-				message={incorrectMessage}
-				lastUpdate={incorrectDate}
-				isStartDate={isStartDate}
-				onBackdropPress={() => setIsDateModalVisible(false)}
-				currentDate={startDate}
-				endDate={endDate}
-				funcGetDate={funcGetDate}
-				isDateModalVisible={isDateModalVisible}
-			/>
+			<Modal
+				isVisible={isMonthModalVisible}
+				onBackdropPress={() => setIsMonthModalVisible(false)}
+				style={{ justifyContent: 'center', alignItems: 'center', margin: 0 }}>
+				<View style={styles.calendarModalContainer}>
+					<MonthPicker
+						selectedDate={selectedMonth}
+						onMonthChange={(date) => pickMonth(date)}
+						selectedBackgroundColor={Colors.GREEN_DARK}
+					/>
+				</View>
+			</Modal>
 			<CustomToast ref={toastRef} />
 		</View >
 	)
 }
 
 const styles = StyleSheet.create({
+	calendarModalContainer: {
+        backgroundColor: Colors.WhiteColor,
+        minHeight: Metrics.SCREEN_WIDTH * 0.9,
+        width: '90%',
+        padding: 5,
+        justifyContent: 'center',
+        borderRadius: 7,
+
+    },
 	dateStyle: {
 		backgroundColor: Colors.WhiteColor,
 		height: 60,
@@ -211,4 +252,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default MonthlTrackScreen
+export default MonthlyTrackScreen

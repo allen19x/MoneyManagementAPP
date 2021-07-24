@@ -19,9 +19,9 @@ const SplashScreen = () => {
 			getAHPAlternative()
 				.then((res) => {
 					if (res) Actions.tabBar()
-					else Actions.tabBar()
+					else Actions.ahp()
 				})
-				.catch(err => Actions.tabBar())
+				.catch(err => Actions.ahp())
 		})
 		})
 

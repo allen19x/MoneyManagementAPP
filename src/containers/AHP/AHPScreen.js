@@ -1,29 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image } from 'react-native'
-import { Actions } from 'react-native-router-flux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, Image } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
+import Modal from 'react-native-modal';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../globals/GlobalConfig'
+import { Colors, Fonts, Illustrations, Metrics, StorageKeys } from '../../globals/GlobalConfig'
 import GlobalStyle from '../../globals/GlobalStyle';
 
 import CustomToast from '../../components/CustomToast';
 import CustomButton from '../../components/CustomButton';
 import CustomInputComponent from '../../components/CustomInputComponent'
 import { inputValidation } from '../../globals/GlobalFunction';
+import { Actions } from 'react-native-router-flux';
 
 const AHPScreen = (props) => {
     const { lastUpdate } = props
     const [isLoading, setIsLoading] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isModalRank, setIsModalRank] = useState(false)
+    const [isModalAnalysisSensitivity, setIsModalAnalysisSensitivity] = useState(false)
     const [isWelcome, setIsWelcome] = useState(false)
     const [isCriteria1, setIsCriteria1] = useState(true)
     const [isCriteria2, setIsCriteria2] = useState(true)
     const [isCriteria3, setIsCriteria3] = useState(true)
 
-    const [Rank1, setRank1] = useState()
-    const [Rank2, setRank2] = useState()
-    const [Rank3, setRank3] = useState()
+    const [MSRank1, setMSRank1] = useState()
+    const [MSRank2, setMSRank2] = useState()
+    const [MSRank3, setMSRank3] = useState()
+
+    const [ASRank1, setASRank1] = useState()
+    const [ASRank2, setASRank2] = useState()
+    const [ASRank3, setASRank3] = useState()
 
     const [alternativePriorityDetail1, setAlternativePriorityDetail1] = useState(0.230)
     const [alternativePriorityDetail2, setAlternativePriorityDetail2] = useState(0.122)
@@ -72,6 +78,8 @@ const AHPScreen = (props) => {
             setIsLoading(false)
         }
         else {
+            let RankMS = []
+            let RankAS = []
             let sum1 = 0
             let sum2 = 0
             let sum3 = 0
@@ -87,6 +95,9 @@ const AHPScreen = (props) => {
             let MS1 = 0
             let MS2 = 0
             let MS3 = 0
+            let AS1 = 0
+            let AS2 = 0
+            let AS3 = 0
             const balancedValue = 1
             const value1 = parseInt(firstValue)
             const value2 = parseInt(secondValue)
@@ -104,20 +115,43 @@ const AHPScreen = (props) => {
             WS2 = (isCriteria1 ? 1 / value1 : value1) * priority1 + balancedValue * priority2 + (isCriteria3 ? value3 : 1 / value3) * priority3
             WS3 = (isCriteria2 ? 1 / value2 : value2) * priority1 + (isCriteria3 ? 1 / value3 : value3) * priority2 + balancedValue * priority3
 
-          
+
             lambdaMax = (WS1 / priority1 + WS2 / priority2 + WS3 / priority3) / 3
             CR = ((lambdaMax - 3) / 2) / 0.58
             console.log(CR.toFixed(3))
 
             if (CR < 0.1) {
-                MS1 = priority1*alternativePriorityDetail1+ priority2*alternativePriorityWants1 + priority3*alternativePriorityDebt1
-                MS2 = priority1*alternativePriorityDetail2+ priority2*alternativePriorityWants2 + priority3*alternativePriorityDebt2
-                MS3 = priority1*alternativePriorityDetail3+ priority2*alternativePriorityWants3 + priority3*alternativePriorityDebt3
-                console.log(MS1.toFixed(3))
-                console.log(MS2.toFixed(3))
-                console.log(MS3.toFixed(3))
+                MS1 = priority1 * alternativePriorityDetail1 + priority2 * alternativePriorityWants1 + priority3 * alternativePriorityDebt1
+                MS2 = priority1 * alternativePriorityDetail2 + priority2 * alternativePriorityWants2 + priority3 * alternativePriorityDebt2
+                MS3 = priority1 * alternativePriorityDetail3 + priority2 * alternativePriorityWants3 + priority3 * alternativePriorityDebt3
+                AS1 = 0.333 * alternativePriorityDetail1 + 0.333 * alternativePriorityWants1 + 0.333 * alternativePriorityDebt1
+                AS2 = 0.333 * alternativePriorityDetail2 + 0.333 * alternativePriorityWants2 + 0.333 * alternativePriorityDebt2
+                AS3 = 0.333 * alternativePriorityDetail3 + 0.333 * alternativePriorityWants3 + 0.333 * alternativePriorityDebt3
+                RankMS = [{ name: 'Budget 50 - 30 - 20', value: MS1 }, { name: 'Budget 80 - 20', value: MS2 }, { name: 'Budget Debt Diet', value: MS3 }]
+                RankAS = [{ name: 'Budget 50 - 30 - 20', value: AS1 }, { name: 'Budget 80 - 20', value: AS2 }, { name: 'Budget Debt Diet', value: AS3 }]
+                RankMS.sort((a, b) => {
+                    if (a.value > b.value) return -1;
+                    if (a.value < b.value) return +1;
+                    return 0;
+                });
+                RankAS.sort((a, b) => {
+                    if (a.value > b.value) return -1;
+                    if (a.value < b.value) return +1;
+                    return 0;
+                });
+                console.log(RankMS)
+                setMSRank1(RankMS[0])
+                setMSRank2(RankMS[1])
+                setMSRank3(RankMS[2])
+
+                setASRank1(RankAS[0])
+                setASRank2(RankAS[1])
+                setASRank3(RankAS[2])
+                setIsModalRank(true)
+                setIsModalVisible(true)
             }
             else {
+                current.showToast('warning', `Consistency ratio = ${CR} ${"\n"} Consistency ratio value must under 0.1, please input new pairwise value`)
                 setFirstValue('')
                 setSecondValue('')
                 setThirdValue('')
@@ -155,6 +189,160 @@ const AHPScreen = (props) => {
         else {
             setIsCriteria3(true)
         }
+    }
+
+    const CloseAnalysisSensitivity = () => {
+        setIsModalAnalysisSensitivity(false)
+        setIsModalRank(true)
+    }
+
+    const AnalysisSensitivity = () => {
+        setIsModalRank(false)
+        setIsModalAnalysisSensitivity(true)
+    }
+
+    const continueWithBudgetPlan = () => {
+        setIsLoading(true)
+        AsyncStorage.setItem(StorageKeys.AHP_ALTERNATIVE, JSON.stringify(MSRank1.name), () => {
+            setIsModalVisible(false)
+            setIsModalAnalysisSensitivity(false)
+            setIsModalRank(false)
+            Actions.dailyTrack()
+        })
+        setIsLoading(false)
+    }
+
+    var modalContent = <View />
+
+    if (isModalRank) {
+        modalContent = (
+            <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 20, width: '100%', height: Metrics.SCREEN_HEIGHT * 0.6, justifyContent: 'space-evenly', alignItems: 'center' }}>
+                {isLoading ? <ActivityIndicator color={Colors.RED} size='large' />
+                    : (
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: 'center',
+                            }}>
+                                <Text style={{ fontSize: 16, letterSpacing: 0.5, lineHeight: 24, color: Colors.DARK, textAlign: 'center', marginBottom: 20 }}>
+                                    We found your best budget plan,{"\n"}
+                                    <Text style={{ fontFamily: Fonts.SF_BOLD }}>{MSRank1.name} </Text>will be applied in this apps
+                                </Text>
+                            </View>
+                            <View style={{
+                                flex: 2,
+                                alignItems: "center",
+                                justifyContent: 'center',
+                            }}>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center', borderWidth: 2, borderColor: Colors.GOLD, paddingHorizontal: 20 }}>
+                                    <Text style={{
+                                        color: Colors.GOLD,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 1</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{MSRank1.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(MSRank1.value * 100).toFixed(1)}%</Text>
+                                </View>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center' }}>
+                                    <Text style={{
+                                        color: Colors.SILVER,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 2</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{MSRank2.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(MSRank2.value * 100).toFixed(1)}%</Text>
+                                </View>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center' }}>
+                                    <Text style={{
+                                        color: Colors.BRONZE,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 3</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{MSRank3.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(MSRank3.value * 100).toFixed(1)}%</Text>
+                                </View>
+                            </View>
+                            <View style={[GlobalStyle.formButtonContainer, { flex: 1, flexDirection: "row", alignItems: 'center', justifyContent: 'center', }]}>
+                                <CustomButton
+                                    customColor={Colors.BLUE_DARK}
+                                    onPress={() => continueWithBudgetPlan()}
+                                    label='Submit'
+                                />
+                                <View style={{ width: 10 }}></View>
+                                <CustomButton
+                                    customColor={Colors.GRAY_DARK}
+                                    onPress={() => AnalysisSensitivity()}
+                                    label='More Detail'
+                                />
+                            </View>
+                        </View>
+                    )
+                }
+            </View >
+        )
+    }
+
+    if (isModalAnalysisSensitivity) {
+        modalContent = (
+            <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 20, width: '100%', height: Metrics.SCREEN_HEIGHT * 0.6, justifyContent: 'space-evenly', alignItems: 'center' }}>
+                {isLoading ? <ActivityIndicator color={Colors.RED} size='large' />
+                    : (
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: 'center',
+                            }}>
+                                <Text style={{ fontSize: 16, letterSpacing: 0.5, lineHeight: 24, color: Colors.DARK, textAlign: 'center', marginBottom: 20, fontWeight: "bold" }}>
+                                    If the criteria priority weight have equal value, here are the rankings :
+                                </Text>
+                            </View>
+                            <View style={{
+                                flex: 2,
+                                alignItems: "center",
+                                justifyContent: 'center',
+                            }}>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center' }}>
+                                    <Text style={{
+                                        color: Colors.GOLD,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 1</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{ASRank1.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(ASRank1.value * 100).toFixed(1)}%</Text>
+                                </View>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center' }}>
+                                    <Text style={{
+                                        color: Colors.SILVER,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 2</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{ASRank2.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(ASRank2.value * 100).toFixed(1)}%</Text>
+                                </View>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: 'center' }}>
+                                    <Text style={{
+                                        color: Colors.BRONZE,
+                                        fontWeight: 'bold',
+                                        fontSize: 20
+                                    }}>Rank 3</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{ASRank3.name}</Text>
+                                    <Text style={GlobalStyle.contentCardTextValue}>{(ASRank3.value * 100).toFixed(1)}%</Text>
+                                </View>
+                            </View>
+                            <View style={[GlobalStyle.formButtonContainer, { flex: 1, flexDirection: "row", alignItems: 'center', justifyContent: 'center', }]}>
+                                <CustomButton
+                                    customColor={Colors.GRAY_DARK}
+                                    onPress={() => CloseAnalysisSensitivity()}
+                                    label='Close'
+                                />
+                            </View>
+                        </View>
+                    )
+                }
+            </View >
+        )
     }
 
     return (
@@ -230,6 +418,11 @@ const AHPScreen = (props) => {
                     </View>
                 </>
             }
+            <Modal
+                children={modalContent}
+                avoidKeyboard={Platform.OS === "ios"}
+                isVisible={isModalVisible}
+                backdropOpacity={0.4} />
             <CustomToast ref={toastRef} />
         </View >
     )

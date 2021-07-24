@@ -1,36 +1,50 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../../globals/GlobalConfig'
+import { Colors, Fonts, Icons, Illustrations } from '../../../globals/GlobalConfig'
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
 import CustomCalendar from '../../../components/CustomCalendar';
+import CustomButton from '../../../components/CustomButton';
+import { getTransactionList } from '../../../globals/GlobalFunction';
 
 const CardDisplay = (props) => {
 	const { data } = props
 	const {
+		type,
+		value,
+		image,
+		note,
+		pickedDate,
+		postingDateTime
 	} = data
 
 	const openDetail = () => {
+		Actions.detailTransaction({
+			date: date,
+			image: image,
+			note: note,
+			transactionType: type,
+			value: value,
+			postingDateTime: postingDateTime
+		})
 	}
 	return (
-		<TouchableOpacity style={styles.cardContainer} onPress={() => openDetail()}>
+		<TouchableOpacity style={[styles.cardContainer, type == "In" ? { backgroundColor: Colors.GREEN_LIGHT } : { backgroundColor: Colors.RED_LIGHT }]} onPress={() => openDetail()}>
 			<View style={{ flex: 3 }}>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
-				<Text style={styles.cardTitleText}></Text>
+				<Text style={styles.cardTitleText}>Transaction Type</Text>
+				<Text style={styles.cardTitleText}>Transaction Nominal</Text>
+				<Text style={styles.cardTitleText}>TransactionDate</Text>
 			</View>
 			<View style={{ flex: 2, alignItems: "flex-end" }}>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
-				<Text style={styles.cardDescriptionText}></Text>
+				<Text style={styles.cardDescriptionText}>{type}</Text>
+				<Text style={styles.cardDescriptionText}>{value}</Text>
+				<Text style={styles.cardDescriptionText}>{moment(pickedDate).format('DD-MM-YYYY')}</Text>
+				{/* <Text style={styles.cardDescriptionText}>{date}</Text> */}
 			</View>
 			<View style={{ flex: 1, alignItems: "flex-end", justifyContent: "center" }}>
 				<Image resizeMethod="resize" source={Icons.iconChevronRight} style={{ height: 15, width: 15 }} />
@@ -49,26 +63,52 @@ const DailyTrackScreen = (props) => {
 	const [dataDailyTrack, setDataDailyTrack] = useState([])
 	const [filteredDailyTrack, setFilteredDailyTrack] = useState([])
 	const toastRef = useRef(null);
-	const [search, setSearch] = useState('')
 	const [startDate, setStartDate] = useState(moment(new Date).startOf('month').format('YYYY-MM-DD'))
 	const [endDate, setEndDate] = useState(moment(new Date).format('YYYY-MM-DD'))
 
 	useEffect(() => {
-		const keys = [
-		]
-		AsyncStorage.multiRemove(keys)
 		initialLoad()
+		// const keys = [
+		// 	StorageKeys.TRANSACTION_LIST
+		// ]
+		// AsyncStorage.multiRemove(keys)
+	}, [])
+
+	useEffect(() => {
+		if (lastUpdate) {
+			initialLoad()
+		}
 	}, [lastUpdate])
 
 	const initialLoad = (data, data2) => {
 		const { current } = toastRef
 		setIsLoading(true)
+		getTransactionList().then(result => {
+			console.log(result)
+			if (data != null && data2 !== null) {
+				var filteredTransaction = result.filter(a => {
+					var date = moment(a.pickedDate).format('DD-MM-YYYY');
+					return (date >= moment(data).format('DD-MM-YYYY') && date <= moment(data2).format('DD-MM-YYYY HH-mm-ss'));
+				});
+				const sortedTransaction = filteredTransaction.sort((a, b) => new Date(b.pickedDate) - new Date(a.pickedDate))
+				setDataDailyTrack(sortedTransaction)
+				setFilteredDailyTrack(sortedTransaction)
+			}
+			else {
+				if(result!=null){
+					var filteredTransaction = result.filter(a => {
+						var date = moment(a.pickedDate).format('DD-MM-YYYY');
+						console.log(date)
+						return (date >= moment(startDate).format('DD-MM-YYYY') && date <= moment(endDate).format('DD-MM-YYYY HH-mm-ss'));
+					});
+					console.log("sss", filteredTransaction)
+					const sortedTransaction = filteredTransaction.sort((a, b) => new Date(b.pickedDate) - new Date(a.pickedDate))
+					setDataDailyTrack(sortedTransaction)
+					setFilteredDailyTrack(sortedTransaction)
+				}
+			}
+		})
 		setIsLoading(false)
-	}
-
-	const clearGR = () => {
-		setSearch("")
-		setFilteredGR(dataGR)
 	}
 
 	const funcGetDate = (res) => {
@@ -112,6 +152,13 @@ const DailyTrackScreen = (props) => {
 					<Text style={{ fontSize: 14, fontFamily: Fonts.SF_REGULAR, letterSpacing: 0.5, lineHeight: 24, color: Colors.SemiBlackColor }}> {moment(startDate).format('DD MMMM')} - {moment(endDate).format('DD MMMM')}</Text>
 				</View>
 			</TouchableOpacity>
+			<View style={[GlobalStyle.formButtonContainer, { flexDirection: "row" }]}>
+				<CustomButton
+					customColor={Colors.BLUE_DARK}
+					onPress={() => Actions.addTransaction()}
+					label='Add Transaction'
+				/>
+			</View>
 			<FlatList
 				refreshControl={(
 					<RefreshControl
@@ -121,7 +168,7 @@ const DailyTrackScreen = (props) => {
 				)}
 				data={filteredDailyTrack}
 				extraData={filteredDailyTrack}
-				keyExtractor={item => String(item.key)}
+				keyExtractor={item => String(item.pickedDate)}
 				contentContainerStyle={GlobalStyle.viewContainer}
 				onEndReachedThreshold={0.1}
 				ListEmptyComponent={(

@@ -21,6 +21,7 @@ import DailyTrackScreen from '../containers/MainTabs/DailyTrack/DailyTrackScreen
 import MonthlTrackScreen from '../containers/MainTabs/MonthlyTrack/MonthlyTrackScreen'
 import TransactionSummary from '../containers/MainTabs/TransactionSummary/TransactionSummaryScreen'
 import AHPScreen from '../containers/AHP/AHPScreen'
+import AddTransactionScreen from '../containers/Utility/AddTransaction/AddTransactionScreen'
 
 
 class TabIcon extends PureComponent {
@@ -123,11 +124,17 @@ const NavigationRouter = () => {
                     component={SplashScreen}
                 />
                 <Scene
-                    initial
                     hideNavBar
                     key='ahp'
                     titleStyle={styles.headerBackTitle}
                     component={AHPScreen} />
+                <Scene
+                    back
+                    key='addTransaction'
+                    onEnter={() => Actions.refresh({ lastUpdate: new Date })}
+                    title="New Transaction"
+                    titleStyle={styles.headerBackTitle}
+                    component={AddTransactionScreen} />
                 <Scene
                     back
                     key='detailTransaction'
