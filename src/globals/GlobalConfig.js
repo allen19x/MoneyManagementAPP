@@ -109,5 +109,9 @@ export const SelectedBudget = Object.freeze({
             type: "DebtPaydown",
             text: "Debt Paydown"
         },
+        {
+            type: "Save",
+            text: "Save"
+        },
     ],
 })

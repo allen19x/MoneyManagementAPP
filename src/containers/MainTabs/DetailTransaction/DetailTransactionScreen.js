@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ScrollView, View, StyleSheet, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux';
 
@@ -19,18 +19,17 @@ const DetailTransaction = (props) => {
 
 	const toastRef = useRef(null);
 
-	useEffect(() => {
-		console.log(date)
-		console.log(postingDateTime)
-	}, [])
-
 	const deleteTransaction = () => {
 		let dataTransaction = []
 		getTransactionList().then(result => {
 			dataTransaction = result
-			let found = dataTransaction.indexOf(e => moment(e.postingDateTime).format('YYYY-MM-DD hh-mm-ss') == moment(postingDateTime).format('YYYY-MM-DD hh-mm-ss'))
-			let newData = dataTransaction.splice(found, result.length - 1);
-			AsyncStorage.setItem(StorageKeys.TRANSACTION_LIST, JSON.stringify(newData));
+			for(var i = 0; i < dataTransaction.length; i++) {
+				if(moment(dataTransaction[i].postingDateTime).format('YYYY-MM-DD hh-mm-ss') == moment(postingDateTime).format('YYYY-MM-DD hh-mm-ss')) {
+					dataTransaction.splice(i, 1);
+					break;
+				}
+			}
+			AsyncStorage.setItem(StorageKeys.TRANSACTION_LIST, JSON.stringify(dataTransaction));
 		})
 		Actions.pop()
 	}
@@ -55,7 +54,7 @@ const DetailTransaction = (props) => {
 						label='Transaction Date'
 						value={date}
 					/>
-					{note!="" &&
+					{note != "" &&
 						<View style={GlobalStyle.formContentContainer}>
 							<CustomInputComponent
 								disabled
@@ -69,7 +68,7 @@ const DetailTransaction = (props) => {
 				</View>
 				<View style={GlobalStyle.formContentContainer}>
 					<View style={[GlobalStyle.formButtonContainer, { paddingHorizontal: 0 }]}>
-						{image !="" ? (
+						{image != "" ? (
 							<View style={styles.tempImageStyle}>
 								<Image resizeMethod="resize" resizeMode='cover' source={{ uri: image }} style={{ height: '100%', width: '100%' }} />
 							</View>
@@ -82,7 +81,7 @@ const DetailTransaction = (props) => {
 						onPress={() => deleteTransaction()}
 						isLoading={isLoading}
 						label='Delete'
-						/>
+					/>
 				</View>
 				<View style={[GlobalStyle.formButtonContainer, { flexDirection: "row" }]}>
 					<CustomButton

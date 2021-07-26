@@ -28,7 +28,7 @@ const CardDisplay = (props) => {
 
 	const openDetail = () => {
 		Actions.detailTransaction({
-			date: date,
+			date: pickedDate,
 			image: image,
 			note: note,
 			transactionType: type,
@@ -37,17 +37,16 @@ const CardDisplay = (props) => {
 		})
 	}
 	return (
-		<TouchableOpacity style={[styles.cardContainer, type == "In" ? { backgroundColor: Colors.GREEN_LIGHT } : { backgroundColor: Colors.RED_LIGHT }]} onPress={() => openDetail()}>
+		<TouchableOpacity style={[styles.cardContainer, type == "In" || type == "Save" ? { backgroundColor: Colors.GREEN_LIGHT } : { backgroundColor: Colors.RED_LIGHT }]} onPress={() => openDetail()}>
 			<View style={{ flex: 3 }}>
+				<Text style={styles.cardTitleText}>Transaction Date</Text>
 				<Text style={styles.cardTitleText}>Transaction Type</Text>
 				<Text style={styles.cardTitleText}>Transaction Nominal</Text>
-				<Text style={styles.cardTitleText}>TransactionDate</Text>
 			</View>
 			<View style={{ flex: 2, alignItems: "flex-end" }}>
+				<Text style={styles.cardDescriptionText}>{moment(pickedDate).format('DD-MM-YYYY')}</Text>
 				<Text style={styles.cardDescriptionText}>{type}</Text>
 				<Text style={styles.cardDescriptionText}>{value}</Text>
-				<Text style={styles.cardDescriptionText}>{moment(pickedDate).format('DD-MM-YYYY')}</Text>
-				{/* <Text style={styles.cardDescriptionText}>{date}</Text> */}
 			</View>
 			<View style={{ flex: 1, alignItems: "flex-end", justifyContent: "center" }}>
 				<Image resizeMethod="resize" source={Icons.iconChevronRight} style={{ height: 15, width: 15 }} />
@@ -70,10 +69,6 @@ const MonthlyTrackScreen = (props) => {
 
 	useEffect(() => {
 		initialLoad()
-		// const keys = [
-		// 	StorageKeys.TRANSACTION_LIST
-		// ]
-		// AsyncStorage.multiRemove(keys)
 	}, [])
 
 	useEffect(() => {
@@ -106,10 +101,6 @@ const MonthlyTrackScreen = (props) => {
 					setDataMonthlyTrack(sortedTransaction)
 					setFilteredMonthlyTrack(sortedTransaction)
 				}
-				// else{
-				// 	setDataMonthlyTrack([])
-				// 	setFilteredMonthlyTrack([])
-				// }
 			}
 		})
 		setIsLoading(false)

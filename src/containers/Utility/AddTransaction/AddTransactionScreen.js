@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../../globals/GlobalConfig'
+import { Colors, Fonts, Icons, Illustrations, Metrics, SelectedBudget, StorageKeys } from '../../../globals/GlobalConfig'
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
@@ -14,23 +14,14 @@ import CustomButton from '../../../components/CustomButton';
 import CustomInputComponent from '../../../components/CustomInputComponent';
 import CustomModalCamera from '../../../components/CustomModalCamera';
 import CustomModalConfirm from '../../../components/CustomModalConfirm';
-import { currencyFormat, getTransactionList, inputValidation } from '../../../globals/GlobalFunction';
+import { currencyFormat, getAHPAlternative, getTransactionList, inputValidation } from '../../../globals/GlobalFunction';
 
 const AddTransactionScreen = (props) => {
     const { lastUpdate } = props
     const [scrollPosition, setScrollPosition] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const [mode, setMode] = useState('')
-    const [type, setType] = useState([
-        {
-            type: "In",
-            text: "In"
-        },
-        {
-            type: "Out",
-            text: "Out"
-        },
-    ])
+    const [type, setType] = useState([])
     const [selectedType, setSelectedType] = useState('')
     const [catatan, setCatatan] = useState('')
     const [nominal, setNominal] = useState("")
@@ -43,14 +34,24 @@ const AddTransactionScreen = (props) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
+        getAHPAlternative().then(result => {
+            if (result == "Budget 50 - 30 - 20") {
+                setType(SelectedBudget.B_50_30_20)
+            }
+            else if (result == "Budget 80 - 20") {
+                setType(SelectedBudget.B_80_20)
+            }
+            else {
+                setType(SelectedBudget.DEBT_DIET)
+            }
+        })
         setFullTime(new Date)
         initialLoad()
     }, [lastUpdate])
 
-    const initialLoad = (data, data2) => {
+    const initialLoad = () => {
         const { current } = toastRef
         setIsLoading(true)
-        setSelectedType(type[0].text)
         setIsLoading(false)
     }
 
@@ -121,13 +122,20 @@ const AddTransactionScreen = (props) => {
             <ScrollView
                 onMomentumScrollEnd={e => setScrollPosition(e.nativeEvent.contentOffset.y)}>
                 <View style={GlobalStyle.formHeaderContentContainer}>
-                    <CustomInputComponent
-                        isOption
-                        label='Transaction Type'
-                        optionList={type}
-                        isOptionIncludeValue={true}
-                        onValueChange={setSelectedType}
-                        value={selectedType} />
+                    {type != null && !isLoading ?
+                        <>
+                            <CustomInputComponent
+                                isOption
+                                label='Transaction Type'
+                                optionList={type}
+                                isOptionIncludeValue={true}
+                                onValueChange={setSelectedType}
+                                value={selectedType} />
+                        </>
+                        :
+                        <>
+                        </>
+                    }
                     <CustomInputComponent
                         label='Transaction Nominal'
                         value={`RP ${nominal}`}
