@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react'
 import { ScrollView, View, StyleSheet, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux';
+import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 import { Colors, StorageKeys } from '../../../globals/GlobalConfig';
+import { currencyFormat, getTransactionList } from '../../../globals/GlobalFunction';
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomInputComponent from '../../../components/CustomInputComponent'
 import CustomButton from '../../../components/CustomButton';
 import CustomToast from '../../../components/CustomToast';
-import moment from 'moment';
-import { currencyFormat, getTransactionList } from '../../../globals/GlobalFunction';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const DetailTransaction = (props) => {
 	const { date, transactionType, value, note, image, postingDateTime } = props

@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
 import Modal from 'react-native-modal';
 import MonthPicker from 'react-native-month-picker';
+import moment from 'moment';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../../globals/GlobalConfig'
+import { Colors, Fonts, Icons, Illustrations, Metrics } from '../../../globals/GlobalConfig'
+import { getTransactionList } from '../../../globals/GlobalFunction';
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
-import CustomCalendar from '../../../components/CustomCalendar';
 import CustomButton from '../../../components/CustomButton';
-import { getTransactionList } from '../../../globals/GlobalFunction';
 
 const CardDisplay = (props) => {
 	const { data } = props

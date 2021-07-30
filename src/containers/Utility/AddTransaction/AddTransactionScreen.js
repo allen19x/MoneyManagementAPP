@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image, ScrollView } from 'react-native'
+import { View, StyleSheet, Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, SelectedBudget, StorageKeys } from '../../../globals/GlobalConfig'
+import { Colors, Fonts, SelectedBudget, StorageKeys } from '../../../globals/GlobalConfig'
+import { getAHPAlternative, getTransactionList, inputValidation } from '../../../globals/GlobalFunction';
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
@@ -14,7 +13,6 @@ import CustomButton from '../../../components/CustomButton';
 import CustomInputComponent from '../../../components/CustomInputComponent';
 import CustomModalCamera from '../../../components/CustomModalCamera';
 import CustomModalConfirm from '../../../components/CustomModalConfirm';
-import { currencyFormat, getAHPAlternative, getTransactionList, inputValidation } from '../../../globals/GlobalFunction';
 
 const AddTransactionScreen = (props) => {
     const { lastUpdate } = props

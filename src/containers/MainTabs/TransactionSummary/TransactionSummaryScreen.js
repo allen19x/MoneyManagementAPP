@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image, ActivityIndicator, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, Image, ActivityIndicator, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import MonthPicker from 'react-native-month-picker';
 
-import { Colors, Fonts, Icons, Illustrations, Metrics, StorageKeys } from '../../../globals/GlobalConfig'
+import { Colors, Fonts, Icons, Illustrations, Metrics } from '../../../globals/GlobalConfig'
+import { currencyFormat, getAHPAlternative, getTransactionList, inputValidation } from '../../../globals/GlobalFunction';
 import GlobalStyle from '../../../globals/GlobalStyle';
 
 import CustomToast from '../../../components/CustomToast';
-import CustomCalendar from '../../../components/CustomCalendar';
 import CustomButton from '../../../components/CustomButton';
-import { currencyFormat, getAHPAlternative, getTransactionList, inputValidation, wait } from '../../../globals/GlobalFunction';
 import CustomInputComponent from '../../../components/CustomInputComponent';
 
 const CardDisplay = (props) => {
@@ -96,6 +94,8 @@ const TransactionSummary = (props) => {
 
 
 	useEffect(() => {
+		console.log(isEndMonth)
+		console.log(isCalculate)
 		getAHPAlternative().then(result => {
 			if (result == "Budget 50 - 30 - 20") {
 				setBudgetPlan(2)
@@ -107,7 +107,7 @@ const TransactionSummary = (props) => {
 				setBudgetPlan(3)
 			}
 		})
-		if (moment(new Date).endOf('month').format('YYYY-MM-DD') == moment(endDate).endOf('month').format('YYYY-MM-DD')) {
+		if (moment(new Date).format('YYYY-MM-DD') == moment(endDate).endOf('month').format('YYYY-MM-DD')) {
 			setIsEndMonth(true)
 			initialLoad(startDate, endDate, 1)
 		}
@@ -118,7 +118,7 @@ const TransactionSummary = (props) => {
 	}, [])
 
 	useEffect(() => {
-		if (moment(new Date).endOf('month').format('YYYY-MM-DD') == moment(endDate).endOf('month').format('YYYY-MM-DD')) {
+		if (moment(new Date).format('YYYY-MM-DD') == moment(endDate).endOf('month').format('YYYY-MM-DD')) {
 			setIsEndMonth(true)
 			initialLoad(startDate, endDate, 1)
 		}
@@ -217,7 +217,7 @@ const TransactionSummary = (props) => {
 				.map(e => e.value)
 			const totalBalanceOutMonthly = totalValueMonthlyOut.reduce((a, b) => a + parseInt(b), 0)
 			setTransactionOutBalanceMonthly(totalBalanceOutMonthly)
-			if (data2==1) {
+			if (data2 == 1) {
 				var income = parseInt(totalBalanceInMonthly)
 				var percentage80 = (income * 80) / 100
 				var percentage20 = (income * 20) / 100
@@ -233,7 +233,7 @@ const TransactionSummary = (props) => {
 			}
 		}
 		else if (budgetPlan == 2) {
-			console.log(isCalculate)
+			// console.log(isCalculate)
 			const totalValueMonthly = data.filter(e => e.type == "Save")
 				.map(e => e.value)
 			const totalBalanceInMonthly = totalValueMonthly.reduce((a, b) => a + parseInt(b), 0);
@@ -248,7 +248,7 @@ const TransactionSummary = (props) => {
 				.map(e => e.value)
 			const totalBalanceOutWantsMonthly = totalValueMonthlyWantsOut.reduce((a, b) => a + parseInt(b), 0)
 			setTransactionOutBalanceWantsMonthly(totalBalanceOutWantsMonthly)
-			if (data2==1) {
+			if (data2 == 1) {
 				var income = parseInt(totalBalanceInMonthly)
 				var percentage50 = (income * 50) / 100
 				var percentage30 = (income * 30) / 100
@@ -292,7 +292,7 @@ const TransactionSummary = (props) => {
 				.map(e => e.value)
 			const totalBalanceOutDebtPaydownMonthly = totalValueMonthlyDebtPaydownOut.reduce((a, b) => a + parseInt(b), 0)
 			setTransactionOutBalanceDebtPaydownMonthly(totalBalanceOutDebtPaydownMonthly)
-			if (data2==1) {
+			if (data2 == 1) {
 				var income = parseInt(totalBalanceInMonthly)
 				var percentage35 = (income * 35) / 100
 				var percentage15Trans = (income * 15) / 100
@@ -390,21 +390,28 @@ const TransactionSummary = (props) => {
 							<View style={{ aspectRatio: 1, paddingHorizontal: 20, justifyContent: 'center' }}>
 								<View style={{ flex: 1, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
 									<Text style={{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GREEN_DARK }}>Transaction In (Rp)</Text>
-									<Text style={{ fontSize: 24, fontFamily: Fonts.SF_BOLD, letterSpacing: 0.75, color: Colors.BLACK }}>{estimatedIncome == "" ? currencyFormat(transactionInMonthly) : currencyFormat(estimatedIncome)}</Text>
-									<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }]}>{currencyFormat(twentyPercent)}</Text>
+									<Text style={{ fontSize: 24, fontFamily: Fonts.SF_BOLD, letterSpacing: 0.75, color: Colors.BLACK }}>Total {estimatedIncome == "" ? currencyFormat(transactionInMonthly) : currencyFormat(estimatedIncome)}</Text>
+									<Text style={{ fontSize: 24, fontFamily: Fonts.SF_BOLD, letterSpacing: 0.75, color: Colors.BLACK }}>Saved {estimatedIncome == "" ? currencyFormat(transactionInMonthly - transactionOutBalanceNeedsMonthly - transactionOutBalanceWantsMonthly) : currencyFormat(estimatedIncome - transactionOutBalanceNeedsMonthly - transactionOutBalanceWantsMonthly)}</Text>
+									<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }]}>Target saved {currencyFormat(twentyPercent)}</Text>
 								</View>
 								<View style={{ width: '100%', borderColor: Colors.GRAY, borderWidth: 2 }} />
 								<View style={{ flex: 1, width: '100%', flexDirection: 'row', marginVertical: 10 }}>
 									<View style={{ flex: 1, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
 										<Text style={{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.RED }}>Transaction Out Needs (Rp)</Text>
 										<Text style={{ fontSize: 24, fontFamily: Fonts.SF_BOLD, letterSpacing: 0.75, color: Colors.BLACK }}>{currencyFormat(transactionOutBalanceNeedsMonthly)}</Text>
-										<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }, transactionOutBalanceNeedsMonthly > fiftyPercent && { color: Colors.RED }]}>{currencyFormat(fiftyPercent)}</Text>
+										<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }, transactionOutBalanceNeedsMonthly > fiftyPercent && { color: Colors.RED }]}>Limit needs {currencyFormat(fiftyPercent)}</Text>
+										{transactionOutBalanceNeedsMonthly > fiftyPercent &&
+											<Text style={{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.RED }}>Exceeds Budget Limit</Text>
+										}
 									</View>
 									<View style={{ height: '100%', borderColor: Colors.GRAY, borderWidth: 1 }} />
 									<View style={{ flex: 1, height: '100%', justifyContent: 'center', alignItems: 'center' }}>
 										<Text style={{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.RED }}>Transaction Out Wants (Rp)</Text>
 										<Text style={{ fontSize: 24, fontFamily: Fonts.SF_BOLD, letterSpacing: 0.75, color: Colors.BLACK }}>{currencyFormat(transactionOutBalanceWantsMonthly)}</Text>
-										<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }, transactionOutBalanceWantsMonthly > thirtyPercent && { color: Colors.RED }]}>{currencyFormat(thirtyPercent)}</Text>
+										<Text style={[{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.GRAY_DARK }, transactionOutBalanceWantsMonthly > thirtyPercent && { color: Colors.RED }]}>Limit wants {currencyFormat(thirtyPercent)}</Text>
+										{transactionOutBalanceWantsMonthly > thirtyPercent &&
+											<Text style={{ fontSize: 12, fontFamily: Fonts.SF_MEDIUM, letterSpacing: 0.38, color: Colors.RED }}>Exceeds Budget Limit</Text>
+										}
 									</View>
 								</View>
 								<View style={{ width: '100%', borderColor: Colors.GRAY, borderWidth: 2 }} />
