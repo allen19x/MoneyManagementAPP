@@ -345,7 +345,7 @@ const TransactionSummary = (props) => {
 	const calculateBudget = () => {
 		const { current } = toastRef
 		if (estimatedIncome == '') {
-			current.showToast('warning', "Please input estimated income!")
+			current.showToast('warning', "Please input estimated income monthly!")
 		}
 		else {
 			setIsLoading(true)
@@ -375,7 +375,7 @@ const TransactionSummary = (props) => {
 
 						<View style={GlobalStyle.formHeaderContentContainer}>
 							<CustomInputComponent
-								label='Estimated Income'
+								label='Estimated Income Monthly'
 								value={estimatedIncome}
 								onChangeText={inputValidation(setEstimatedIncome, "money")}
 								keyboardType='numeric'

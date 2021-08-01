@@ -31,17 +31,17 @@ const AHPScreen = (props) => {
     const [ASRank2, setASRank2] = useState()
     const [ASRank3, setASRank3] = useState()
 
-    const [alternativePriorityDetail1, setAlternativePriorityDetail1] = useState(0.230)
-    const [alternativePriorityDetail2, setAlternativePriorityDetail2] = useState(0.122)
-    const [alternativePriorityDetail3, setAlternativePriorityDetail3] = useState(0.648)
+    const [alternativePriorityDetail1, setAlternativePriorityDetail1] = useState(0.213)
+    const [alternativePriorityDetail2, setAlternativePriorityDetail2] = useState(0.085)
+    const [alternativePriorityDetail3, setAlternativePriorityDetail3] = useState(0.701)
 
-    const [alternativePriorityWants1, setAlternativePriorityWants1] = useState(0.633)
-    const [alternativePriorityWants2, setAlternativePriorityWants2] = useState(0.260)
-    const [alternativePriorityWants3, setAlternativePriorityWants3] = useState(0.106)
+    const [alternativePriorityWants1, setAlternativePriorityWants1] = useState(0.499)
+    const [alternativePriorityWants2, setAlternativePriorityWants2] = useState(0.265)
+    const [alternativePriorityWants3, setAlternativePriorityWants3] = useState(0.080)
 
-    const [alternativePriorityDebt1, setAlternativePriorityDebt1] = useState(0.429)
-    const [alternativePriorityDebt2, setAlternativePriorityDebt2] = useState(0.429)
-    const [alternativePriorityDebt3, setAlternativePriorityDebt3] = useState(0.143)
+    const [alternativePriorityDebt1, setAlternativePriorityDebt1] = useState(0.111)
+    const [alternativePriorityDebt2, setAlternativePriorityDebt2] = useState(0.444)
+    const [alternativePriorityDebt3, setAlternativePriorityDebt3] = useState(0.444)
 
     const [firstValue, setFirstValue] = useState('')
     const [secondValue, setSecondValue] = useState('')
