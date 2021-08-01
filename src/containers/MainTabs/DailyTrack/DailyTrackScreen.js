@@ -86,6 +86,7 @@ const DailyTrackScreen = (props) => {
 		const { current } = toastRef
 		setIsLoading(true)
 		getTransactionList().then(result => {
+			console.log("Saved Transaction Data", result)
 			if (data != null && data2 !== null) {
 				var filteredTransaction = result.filter(a => {
 					var date = moment(a.pickedDate).format('DD-MM-YYYY');

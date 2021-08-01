@@ -231,6 +231,10 @@ const TransactionSummary = (props) => {
 				setEightyPercent(percentage80)
 				setTwentyPercent(percentage20)
 			}
+			console.log("80%", percentage80)
+			console.log("20%", percentage20)
+			console.log("Transaction In", totalBalanceInMonthly)
+			console.log("Transaction Out", totalBalanceOutMonthly)
 		}
 		else if (budgetPlan == 2) {
 			// console.log(isCalculate)
@@ -266,6 +270,12 @@ const TransactionSummary = (props) => {
 				setThirtyPercent(percentage30)
 				setTwentyPercent(percentage20)
 			}
+			console.log("50%", percentage50)
+			console.log("30%", percentage30)
+			console.log("20%", percentage20)
+			console.log("Transaction In", totalBalanceInMonthly)
+			console.log("Transaction Out Needs", totalBalanceOutNeedsMonthly)
+			console.log("Transaction Out Wants", totalBalanceOutWantsMonthly)
 		}
 		else {
 			const totalValueMonthly = data.filter(e => e.type == "Save")
@@ -318,6 +328,16 @@ const TransactionSummary = (props) => {
 				setFifiteenPercent2(percentage15Debt)
 				setFifiteenPercent3(percentage15Save)
 			}
+			console.log("35%", percentage35)
+			console.log("15% Trans", percentage15Trans)
+			console.log("20% Other Living Expense", percentage20)
+			console.log("15% Debt", percentage15Debt)
+			console.log("15% Save", percentage15Save)
+			console.log("Transaction In", totalBalanceInMonthly)
+			console.log("Transaction Out Housing", totalBalanceOutHousingMonthly)
+			console.log("Transaction Out Transportation", totalBalanceOutTransportationMonthly)
+			console.log("Transaction Out Other Living Expense", totalBalanceOutWantsNOtherMonthly)
+			console.log("Transaction Out Debt", totalBalanceOutDebtPaydownMonthly)
 		}
 		setIsLoading(false)
 	}

@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 import Modal from 'react-native-modal';
+import { Actions } from 'react-native-router-flux';
 
 import { Colors, Fonts, Illustrations, Metrics, StorageKeys } from '../../globals/GlobalConfig'
+import { inputValidation } from '../../globals/GlobalFunction';
 import GlobalStyle from '../../globals/GlobalStyle';
 
 import CustomToast from '../../components/CustomToast';
 import CustomButton from '../../components/CustomButton';
 import CustomInputComponent from '../../components/CustomInputComponent'
-import { inputValidation } from '../../globals/GlobalFunction';
-import { Actions } from 'react-native-router-flux';
 
 const AHPScreen = (props) => {
     const { lastUpdate } = props
@@ -139,7 +139,20 @@ const AHPScreen = (props) => {
                     if (a.value < b.value) return +1;
                     return 0;
                 });
-                console.log(RankMS)
+                // console.log("Criteria Priority 1", priority1)
+                // console.log("Criteria Priority 2", priority2)
+                // console.log("Criteria Priority 3", priority3)
+                // console.log("Weight Criteria 1", WS1)
+                // console.log("Weight Criteria 2", WS2)
+                // console.log("Weight Criteria 3", WS3)
+                // console.log("Model Sintesis 1", MS1)
+                // console.log("Model Sintesis 2", MS2)
+                // console.log("Model Sintesis 3", MS3)
+                // console.log("Anaylsis Sensitivity 1", AS1)
+                // console.log("Anaylsis Sensitivity 2", AS2)
+                // console.log("Anaylsis Sensitivity 3", AS3)
+                // console.log("Consistency Ratio", CR)
+                // console.log("Alternative Rank", RankMS)
                 setMSRank1(RankMS[0])
                 setMSRank2(RankMS[1])
                 setMSRank3(RankMS[2])
