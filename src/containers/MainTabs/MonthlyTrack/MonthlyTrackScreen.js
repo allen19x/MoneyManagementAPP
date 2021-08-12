@@ -79,12 +79,13 @@ const MonthlyTrackScreen = (props) => {
 		const { current } = toastRef
 		setIsLoading(true)
 		getTransactionList().then(result => {
+			console.log("Filtered Data", result)
 			if (data != null && data2 !== null) {
 				var filteredTransaction = result.filter(a => {
 					var date = moment(a.pickedDate).format('MM');
 					return (date >= moment(data).format('MM') && date <= moment(data2).format('MM'));
 				});
-				console.log(data, data2)
+				console.log(data, data2) 
 				const sortedTransaction = filteredTransaction.sort((a, b) => new Date(b.pickedDate) - new Date(a.pickedDate))
 				setDataMonthlyTrack(sortedTransaction)
 				setFilteredMonthlyTrack(sortedTransaction)
@@ -105,6 +106,7 @@ const MonthlyTrackScreen = (props) => {
 	}
 
 	const pickMonth =(data)=> {
+		console.log("Selected Month", moment(data).format('MMMM'))
 		setStartDate(moment(data).startOf('month').format('YYYY-MM-DD'))
 		setEndDate(moment(data).endOf('month').format('YYYY-MM-DD'))
 		let startMonth = moment(data).startOf('month').format('YYYY-MM-DD')

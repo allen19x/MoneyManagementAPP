@@ -26,6 +26,7 @@ const DetailTransaction = (props) => {
 			for(var i = 0; i < dataTransaction.length; i++) {
 				if(moment(dataTransaction[i].postingDateTime).format('YYYY-MM-DD hh-mm-ss') == moment(postingDateTime).format('YYYY-MM-DD hh-mm-ss')) {
 					dataTransaction.splice(i, 1);
+					console.log("Deleted Data", dataTransaction)
 					break;
 				}
 			}

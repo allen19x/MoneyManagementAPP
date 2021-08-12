@@ -103,6 +103,7 @@ const AddTransactionScreen = (props) => {
                 postingDateTime: fullTime,
                 pickedDate: date
             };
+            console.log("Add Transaction", data)
             if (result != null) {
                 let transactionData = [...result, data]
                 AsyncStorage.setItem(StorageKeys.TRANSACTION_LIST, JSON.stringify(transactionData));

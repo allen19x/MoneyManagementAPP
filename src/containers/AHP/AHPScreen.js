@@ -35,7 +35,7 @@ const AHPScreen = (props) => {
     const [alternativePriorityDetail2, setAlternativePriorityDetail2] = useState(0.085)
     const [alternativePriorityDetail3, setAlternativePriorityDetail3] = useState(0.701)
 
-    const [alternativePriorityWants1, setAlternativePriorityWants1] = useState(0.499)
+    const [alternativePriorityWants1, setAlternativePriorityWants1] = useState(0.656)
     const [alternativePriorityWants2, setAlternativePriorityWants2] = useState(0.265)
     const [alternativePriorityWants3, setAlternativePriorityWants3] = useState(0.080)
 

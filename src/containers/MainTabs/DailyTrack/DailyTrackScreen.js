@@ -86,7 +86,7 @@ const DailyTrackScreen = (props) => {
 		const { current } = toastRef
 		setIsLoading(true)
 		getTransactionList().then(result => {
-			console.log("Saved Transaction Data", result)
+			console.log("Filtered Data", result)
 			if (data != null && data2 !== null) {
 				var filteredTransaction = result.filter(a => {
 					var date = moment(a.pickedDate).format('DD-MM-YYYY');
@@ -120,6 +120,7 @@ const DailyTrackScreen = (props) => {
 				setIncorrectDate(new Date)
 				setIncorrectMessage("Start date must be smaller than end date")
 			} else {
+				console.log("Selected Start Date", res.dateString)
 				setStartDate(res.dateString)
 				setIsStartDate(true)
 			}
@@ -133,6 +134,7 @@ const DailyTrackScreen = (props) => {
 				setIncorrectMessage("Start date must be smaller than end date")
 			}
 			else {
+				console.log("Selected End Date", res.dateString)
 				setEndDate(res.dateString)
 				setIsStartDate(false)
 				setIsDateModalVisible(false)
