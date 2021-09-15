@@ -319,9 +319,9 @@ const TransactionSummary = (props) => {
 				var income = parseInt(estimatedIncome)
 				var percentage35 = (income * 35) / 100
 				var percentage15Trans = (income * 15) / 100
-				var percentage20 = (income * 20) / 100
+				var percentage20 = (income * 25) / 100
 				var percentage15Debt = (income * 15) / 100
-				var percentage15Save = (income * 15) / 100
+				var percentage15Save = (income * 10) / 100
 				setThirtyFivePercent(percentage35)
 				setFifiteenPercent1(percentage15Trans)
 				setTwentyPercent(percentage20)

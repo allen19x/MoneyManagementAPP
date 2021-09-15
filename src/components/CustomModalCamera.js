@@ -55,7 +55,7 @@ const CustomModalCamera = (props) => {
                     captureAudio={false}
                     androidCameraPermissionOptions={{
                         title: 'Izin menggunakan kamera',
-                        message: 'Kemenko Maritim butuh akses kamera',
+                        message: 'Membutuhkan akses kamera',
                         buttonPositive: 'Ok',
                         buttonNegative: 'Batal'
                     }}
